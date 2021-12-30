@@ -9,7 +9,8 @@ const userRoutes = express.Router();
 userRoutes.get("/", async (req, res) => {
   await userModel
     .find()
-    .select("name username isActive createdBy employeeRef")
+    .select("name username isActive createdBy employeeRef roleRef")
+    .populate("roleRef")
     .exec()
     .then(
       (result) => {
@@ -21,6 +22,56 @@ userRoutes.get("/", async (req, res) => {
     );
 });
 
-userRoutes.post("/createUser");
+userRoutes.post("/create", async (req, res) => {
+  await userModel
+    .create({
+      name: req.body?.name,
+      username: req.body?.username,
+      password: req.body?.password,
+      isActive: req.body?.isActive,
+      employeeRef: req.body?.employeeID,
+      roleRef: req.body?.roleID,
+    })
+    .then(
+      (success) => {
+        getSuccessResponse(res, success);
+      },
+      (error) => {
+        getErrorResponse(res, error);
+      }
+    );
+});
+
+userRoutes.put("/:userId", async (req, res) => {
+  await userModel
+    .updateOne(
+      { _id: req.params.userId },
+      {
+        name: req.body?.name,
+        isActive: req.body?.isActive,
+        employeeRef: req.body?.employeeID,
+        roleRef: req.body?.roleID,
+      }
+    )
+    .then(
+      (success) => {
+        getSuccessResponse(res, success);
+      },
+      (error) => {
+        getErrorResponse(res, error);
+      }
+    );
+});
+
+userRoutes.delete("/:userId", async (req, res) => {
+  await userModel.deleteOne({ _id: req.params.userId }).then(
+    (success) => {
+      getSuccessResponse(res, success);
+    },
+    (error) => {
+      getErrorResponse(res, error);
+    }
+  );
+});
 
 module.exports = userRoutes;
