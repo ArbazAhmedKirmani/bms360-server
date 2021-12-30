@@ -52,9 +52,23 @@ const getSuccessResponse = (res, object) => {
   });
 };
 
+/**
+ *
+ * @param {res} res Respone from the request
+ */
+const authErrorResponse = (res, data) => {
+  res.status(401).json({
+    message: "UnAuthorized user",
+    errorMessage: { message: `Unauthorized User - ${data.message}` },
+    ok: false,
+    data: {},
+  });
+};
+
 module.exports = {
   createSuccessResponse,
   createErrorResponse,
   getErrorResponse,
   getSuccessResponse,
+  authErrorResponse,
 };
