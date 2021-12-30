@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const morgan = require("morgan");
 
 // Importing Routes
 const authRoutes = require("./api/routes/auth.routes");
@@ -12,6 +13,7 @@ const interceptors = require("./common/interceptors");
 const app = express();
 
 app.use(cors());
+app.use(morgan());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
