@@ -1,10 +1,12 @@
 const express = require("express");
 const jsonwebtoken = require('jsonwebtoken');
-const { getErrorResponse, getSuccessResponse } = '../../common/responseFunctions';
+const { getSuccessResponse, getErrorResponse } = require("../../common/responseFunctions");
 const compareBcrypt = require('../../common/secretFunctions');
+const userModel = require("../models/user.model");
+
 const authRoutes = express.Router();
 
-authRoutes.get("/", async (req, res) => {
+authRoutes.post("/login", async (req, res) => {
 await userModel.findOne({
     username: req.body.username,
     isActive: true
