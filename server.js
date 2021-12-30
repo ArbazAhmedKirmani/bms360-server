@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -23,14 +23,16 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
+  .then(
+    () => {
       console.log("Database sucessfully connected!");
-    }, (error) => {
+    },
+    (error) => {
       console.log("Could not connect to database : " + error);
     }
   );
 
-app.use(interceptors)
+app.use(interceptors);
 
 app.use("/auth", authRoutes); // public routes
 app.use("/api", mainRoutes); // protected routes
