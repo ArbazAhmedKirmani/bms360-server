@@ -6,8 +6,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, trim: true },
   isActive: { type: Boolean, required: true, },
   employeeRef: { type: mongoose.Schema.Types.ObjectId, required: false, default: null, trim: true, ref: 'employees' },
-  createdBy: { type: String, required: false },
-  updatedBy: { type: String, required: false },
+  createdBy: { type: String, required: false, default: global.createdBy },
+  updatedBy: { type: String, required: false, default: global.updatedBy },
 },{ timestamps: true});
 
 const userModel = mongoose.model("users", userSchema);
