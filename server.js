@@ -13,7 +13,7 @@ const interceptors = require("./common/interceptors");
 const app = express();
 
 app.use(cors());
-app.use(morgan());
+app.use(morgan("dev"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
