@@ -1,5 +1,4 @@
 const express = require("express");
-const jsonwebtoken = require("jsonwebtoken");
 const {
   getSuccessResponse,
   getErrorResponse,
