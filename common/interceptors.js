@@ -7,7 +7,9 @@ const interceptors = express();
 
 interceptors.use((req, res, next) => {
   // console.log(req.socket.remoteAddress);
-  verifyToken(req.headers.authorization.split(" ")[1]).then(
+
+  const token = req.headers.authorization.split("Bearer ")[1].trim();
+  verifyToken(token).then(
     (success) => {
       if (req.method === "POST") {
         global.createdBy = "auth";
