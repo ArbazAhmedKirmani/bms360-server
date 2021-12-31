@@ -37,4 +37,19 @@ const verifyToken = (token) =>
     });
   });
 
-module.exports = { genrateToken, compareBcrypt, verifyToken };
+/**
+ *
+ * @param {password} password Password that needs to be updated!
+ */
+const hashPassword = (password) => {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 8, (error, hash) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(hash);
+    });
+  });
+};
+
+module.exports = { genrateToken, compareBcrypt, verifyToken, hashPassword };
