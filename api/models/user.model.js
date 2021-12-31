@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      default: "",
       lowercase: true,
       trim: true,
     },
@@ -38,10 +37,11 @@ const userSchema = new mongoose.Schema(
     roleRef: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,
+      default: null,
       ref: "roles",
     },
-    createdBy: { type: String, required: false, default: global.createdBy },
-    updatedBy: { type: String, required: false, default: global.updatedBy },
+    createdBy: { type: String, required: false },
+    updatedBy: { type: String, required: false },
   },
   { timestamps: true }
 );

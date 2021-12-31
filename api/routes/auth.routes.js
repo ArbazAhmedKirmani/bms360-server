@@ -1,4 +1,5 @@
 const express = require("express");
+const { sendEmail } = require("../../common/commonFunctions");
 const {
   getSuccessResponse,
   getErrorResponse,
@@ -6,7 +7,7 @@ const {
 const {
   compareBcrypt,
   genrateToken,
-  hashPassword,
+  encryptPassword,
 } = require("../../common/secretFunctions");
 const userModel = require("../models/user.model");
 
@@ -45,7 +46,7 @@ authRoutes.post("/forgetPassword", async (req, res) => {
       username: req.body.username,
       isActive: true,
     })
-    .select("name username roleRef")
+    .select("name username email roleRef")
     .exec()
     .then(
       async (success) => {
@@ -54,10 +55,21 @@ authRoutes.post("/forgetPassword", async (req, res) => {
         }
         const randomPassword = Math.random().toString(36).slice(-9);
         const filter = { username: req.body.username };
-        const update = { password: await hashPassword(randomPassword) };
+        const update = { password: await encryptPassword(randomPassword) };
         await userModel.findOneAndUpdate(filter, update).then(
-          (success) => {
-            getSuccessResponse(res, randomPassword);
+          async (success) => {
+            await sendEmail(
+              success.email,
+              "Your new password for 360-Solutions",
+              `<div><h3>Your New Password is below</h3><h1>${randomPassword}</h1></div>`
+            ).then(
+              (success) => {
+                getSuccessResponse(res, { randomPassword, success });
+              },
+              (err) => {
+                getErrorResponse(res, err);
+              }
+            );
           },
           (error) => {
             getErrorResponse(res, error);

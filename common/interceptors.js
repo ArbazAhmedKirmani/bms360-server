@@ -1,4 +1,5 @@
 const express = require("express");
+const jsonwebtoken = require("jsonwebtoken");
 const { authErrorResponse } = require("./responseFunctions");
 const { verifyToken } = require("./secretFunctions");
 const interceptors = express();
@@ -6,14 +7,14 @@ const interceptors = express();
 // Include all interceptors here...
 
 interceptors.use((req, res, next) => {
-  // console.log(req.socket.remoteAddress);
   if (req.headers.authorization) {
     verifyToken(req.headers?.authorization.split(" ")[1].trim()).then(
       (success) => {
+        console.log("success", success);
         if (req.method === "POST") {
-          global.createdBy = "auth";
+          req.body.createdBy = success.data.id;
         } else if (req.method === "PUT") {
-          global.updatedBy = "success";
+          req.body.updatedBy = success.data.id;
         }
         next();
       },
@@ -22,12 +23,6 @@ interceptors.use((req, res, next) => {
       }
     );
   } else authErrorResponse(res, { message: "Auth Signature is Missing" });
-});
-
-interceptors.use((req, res, next) => {
-  next();
-  delete global.createdBy;
-  delete global.updatedBy;
 });
 
 module.exports = interceptors;
