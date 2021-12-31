@@ -26,24 +26,14 @@ userRoutes.get("/", async (req, res) => {
 userRoutes.post("/create", async (req, res) => {
   await encryptPassword(req.body?.password).then(
     async (success) => {
-      console.log(success);
-      await userModel
-        .create({
-          name: req.body?.name,
-          username: req.body?.username,
-          password: success,
-          isActive: req.body?.isActive,
-          employeeRef: req.body?.employeeID,
-          roleRef: req.body?.roleID,
-        })
-        .then(
-          (success) => {
-            getSuccessResponse(res, success);
-          },
-          (error) => {
-            getErrorResponse(res, error);
-          }
-        );
+      await userModel.create(req.body).then(
+        (success) => {
+          getSuccessResponse(res, success);
+        },
+        (error) => {
+          getErrorResponse(res, error);
+        }
+      );
     },
     (error) => {
       getErrorResponse(res, error);
@@ -52,24 +42,14 @@ userRoutes.post("/create", async (req, res) => {
 });
 
 userRoutes.put("/:userId", async (req, res) => {
-  await userModel
-    .updateOne(
-      { _id: req.params.userId },
-      {
-        name: req.body?.name,
-        isActive: req.body?.isActive,
-        employeeRef: req.body?.employeeID,
-        roleRef: req.body?.roleID,
-      }
-    )
-    .then(
-      (success) => {
-        getSuccessResponse(res, success);
-      },
-      (error) => {
-        getErrorResponse(res, error);
-      }
-    );
+  await userModel.updateOne({ _id: req.params.userId }, req.body).then(
+    (success) => {
+      getSuccessResponse(res, success);
+    },
+    (error) => {
+      getErrorResponse(res, error);
+    }
+  );
 });
 
 userRoutes.delete("/:userId", async (req, res) => {

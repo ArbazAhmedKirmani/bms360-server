@@ -23,38 +23,25 @@ rolesRoute.get("/get", async (req, res) => {
 });
 
 rolesRoute.post("/create", async (req, res) => {
-  await rolesModel
-    .create({
-      roleName: req.body?.roleName,
-      isActive: req.body?.isActive,
-    })
-    .then(
-      (success) => {
-        getSuccessResponse(res, success);
-      },
-      (error) => {
-        getErrorResponse(res, error);
-      }
-    );
+  await rolesModel.create(req.body).then(
+    (success) => {
+      getSuccessResponse(res, success);
+    },
+    (error) => {
+      getErrorResponse(res, error);
+    }
+  );
 });
 
 rolesRoute.put("/:roleId", async (req, res) => {
-  await rolesModel
-    .updateOne(
-      { _id: req.params.roleId },
-      {
-        roleName: req.body?.roleName,
-        isActive: req.body?.isActive,
-      }
-    )
-    .then(
-      (success) => {
-        getSuccessResponse(res, success);
-      },
-      (error) => {
-        getErrorResponse(res, error);
-      }
-    );
+  await rolesModel.updateOne({ _id: req.params.roleId }, req.body).then(
+    (success) => {
+      getSuccessResponse(res, success);
+    },
+    (error) => {
+      getErrorResponse(res, error);
+    }
+  );
 });
 
 rolesRoute.delete("/:roleId", async (req, res) => {
