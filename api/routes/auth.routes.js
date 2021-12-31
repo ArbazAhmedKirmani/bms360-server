@@ -35,4 +35,33 @@ authRoutes.post("/login", async (req, res) => {
     });
 });
 
+// authRoutes.post("/signup", async (req, res) => {
+//   await userModel
+//     .create({
+//       name: req.body.name,
+//       username: req.body.username,
+//       password: req.body.password,
+//       isActive: true,
+//     })
+//     .select("name username password")
+//     .exec()
+//     .then(async (result, error) => {
+//       if (error) {
+//         getErrorResponse(res, error);
+//       }
+//       await compareBcrypt(req.body.password, result.password).then(
+//         (resolve) => {
+//           if (!resolve) {
+//             return getErrorResponse(res, "Incorrect Password");
+//           }
+//           const token = genrateToken(result);
+//           getSuccessResponse(res, { token, result });
+//         },
+//         (err) => {
+//           getErrorResponse(res, err);
+//         }
+//       );
+//     });
+// });
+
 module.exports = authRoutes;

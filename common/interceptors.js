@@ -16,12 +16,8 @@ interceptors.use((req, res, next) => {
       } else if (req.method === "PUT") {
         global.updatedBy = "success";
       }
-      next();
-    },
-    (error) => {
-      authErrorResponse(res, error);
-    }
-  );
+    );
+  } else authErrorResponse(res, { message: "Auth Signature is Missing" });
 });
 
 interceptors.use((req, res, next) => {
