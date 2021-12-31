@@ -34,10 +34,11 @@ mongoose
     }
   );
 
-app.use(interceptors);
+// app.use(interceptors);
 
 app.use("/auth", authRoutes); // public routes
-app.use("/api", mainRoutes); // protected routes
+app.use("/api", interceptors); // protected routes
+app.use("/api/version", mainRoutes); // protected routes
 
 // Listening to Port
 app.listen(process.env.PORT || 4250, () => {
