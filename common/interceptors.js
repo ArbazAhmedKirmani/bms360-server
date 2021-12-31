@@ -7,21 +7,21 @@ const interceptors = express();
 
 interceptors.use((req, res, next) => {
   // console.log(req.socket.remoteAddress);
-
-  const token = req.headers.authorization.split("Bearer ")[1].trim();
-  verifyToken(token).then(
-    (success) => {
-      if (req.method === "POST") {
-        global.createdBy = "auth";
-      } else if (req.method === "PUT") {
-        global.updatedBy = "success";
+  if (req.headers.authorization) {
+    verifyToken(req.headers?.authorization.split(" ")[1].trim()).then(
+      (success) => {
+        if (req.method === "POST") {
+          global.createdBy = "auth";
+        } else if (req.method === "PUT") {
+          global.updatedBy = "success";
+        }
+        next();
+      },
+      (error) => {
+        authErrorResponse(res, error);
       }
-      next();
-    },
-    (error) => {
-      authErrorResponse(res, error);
-    }
-  );
+    );
+  } else authErrorResponse(res, { message: "Auth Signature is Missing" });
 });
 
 interceptors.use((req, res, next) => {

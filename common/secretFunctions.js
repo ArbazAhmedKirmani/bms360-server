@@ -27,6 +27,19 @@ const compareBcrypt = (password, hashPassword) => {
   });
 };
 
+const encryptPassword = (password) => {
+  return new Promise((resolve, reject) =>
+    bcrypt.hash(password, 10).then(
+      (success) => {
+        resolve(success);
+      },
+      (error) => {
+        reject(error);
+      }
+    )
+  );
+};
+
 const verifyToken = (token) =>
   new Promise((resolve, reject) => {
     jwt.verify(token, process.env.PRIVATE_KEY, (err, result) => {
@@ -52,4 +65,4 @@ const hashPassword = (password) => {
   });
 };
 
-module.exports = { genrateToken, compareBcrypt, verifyToken, hashPassword };
+module.exports = { genrateToken, compareBcrypt, verifyToken, hashPassword, encryptPassword };

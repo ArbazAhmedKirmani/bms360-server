@@ -3,6 +3,7 @@ const {
   getErrorResponse,
   getSuccessResponse,
 } = require("../../common/responseFunctions");
+const { encryptPassword } = require("../../common/secretFunctions");
 const userModel = require("../models/user.model");
 const userRoutes = express.Router();
 
@@ -23,23 +24,31 @@ userRoutes.get("/", async (req, res) => {
 });
 
 userRoutes.post("/create", async (req, res) => {
-  await userModel
-    .create({
-      name: req.body?.name,
-      username: req.body?.username,
-      password: req.body?.password,
-      isActive: req.body?.isActive,
-      employeeRef: req.body?.employeeID,
-      roleRef: req.body?.roleID,
-    })
-    .then(
-      (success) => {
-        getSuccessResponse(res, success);
-      },
-      (error) => {
-        getErrorResponse(res, error);
-      }
-    );
+  await encryptPassword(req.body?.password).then(
+    async (success) => {
+      console.log(success);
+      await userModel
+        .create({
+          name: req.body?.name,
+          username: req.body?.username,
+          password: success,
+          isActive: req.body?.isActive,
+          employeeRef: req.body?.employeeID,
+          roleRef: req.body?.roleID,
+        })
+        .then(
+          (success) => {
+            getSuccessResponse(res, success);
+          },
+          (error) => {
+            getErrorResponse(res, error);
+          }
+        );
+    },
+    (error) => {
+      getErrorResponse(res, error);
+    }
+  );
 });
 
 userRoutes.put("/:userId", async (req, res) => {
