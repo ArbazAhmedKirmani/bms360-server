@@ -6,9 +6,9 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
 // Importing Routes
-const authRoutes = require("./api/routes/auth.routes");
-const mainRoutes = require("./main.routes");
 const interceptors = require("./common/interceptors");
+const authRoutes = require("./api/auth.routes");
+const router1Routes = require("./api/v1/router1.routes");
 
 const app = express();
 
@@ -38,7 +38,7 @@ mongoose
 
 app.use("/auth", authRoutes); // public routes
 app.use("/api", interceptors); // protected routes
-app.use("/api/version", mainRoutes); // protected routes
+app.use("/api/v1", router1Routes); // protected routes
 
 // Listening to Port
 app.listen(process.env.PORT || 4250, () => {

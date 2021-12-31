@@ -1,5 +1,12 @@
 const nodemailer = require("nodemailer");
 
+/**
+ *
+ * @param {string[]} to String OR String[]
+ * @param {String} subject Subject to be Defined in Mail
+ * @param {String} text Body to me defined in mail
+ * @returns
+ */
 const sendEmail = async (to, subject, text) => {
   return new Promise(async (resolve, reject) => {
     let mailTransporter = nodemailer.createTransport({
