@@ -2,7 +2,7 @@ const express = require("express");
 const {
   getSuccessResponse,
   getErrorResponse,
-} = require("../../common/responseFunctions");
+} = require("../../../common/responseFunctions");
 const rolesModel = require("../models/roles.model");
 const rolesRoute = express.Router();
 

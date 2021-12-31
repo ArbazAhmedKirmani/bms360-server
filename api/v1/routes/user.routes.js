@@ -2,8 +2,8 @@ const express = require("express");
 const {
   getErrorResponse,
   getSuccessResponse,
-} = require("../../common/responseFunctions");
-const { encryptPassword } = require("../../common/secretFunctions");
+} = require("../../../common/responseFunctions");
+const { encryptPassword } = require("../../../common/secretFunctions");
 const userModel = require("../models/user.model");
 const userRoutes = express.Router();
 

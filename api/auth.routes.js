@@ -1,15 +1,15 @@
 const express = require("express");
-const { sendEmail } = require("../../common/commonFunctions");
 const {
-  getSuccessResponse,
   getErrorResponse,
-} = require("../../common/responseFunctions");
+  getSuccessResponse,
+} = require("../common/responseFunctions");
 const {
   compareBcrypt,
   genrateToken,
   encryptPassword,
-} = require("../../common/secretFunctions");
-const userModel = require("../models/user.model");
+} = require("../common/secretFunctions");
+const { sendEmail } = require("../common/commonFunctions");
+const userModel = require("./v1/models/user.model");
 
 const authRoutes = express.Router();
 
@@ -53,7 +53,7 @@ authRoutes.post("/forgetPassword", async (req, res) => {
         if (!success) {
           return getErrorResponse(res, "User not found");
         }
-        const randomPassword = Math.random().toString(36).slice(-9);
+        const randomPassword = Math.random().toString(36).slice(-8);
         const filter = { username: req.body.username };
         const update = { password: await encryptPassword(randomPassword) };
         await userModel.findOneAndUpdate(filter, update).then(
