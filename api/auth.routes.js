@@ -21,17 +21,17 @@ authRoutes.post("/login", async (req, res) => {
     })
     .select("name username password")
     .exec()
-    .then(async (result, error) => {
-      if (error) {
-        getErrorResponse(res, error);
+    .then(async (user) => {
+      if (!user) {
+        return getErrorResponse(res, "This user is not active, or not exist!");
       }
-      await compareBcrypt(req.body.password, result.password).then(
+      await compareBcrypt(req.body.password, user.password).then(
         (resolve) => {
           if (!resolve) {
             return getErrorResponse(res, "Incorrect Password");
           }
-          const token = genrateToken(result);
-          getSuccessResponse(res, { token, result });
+          const token = genrateToken(user);
+          getSuccessResponse(res, { token, user });
         },
         (err) => {
           getErrorResponse(res, err);
@@ -51,7 +51,10 @@ authRoutes.post("/forgetPassword", async (req, res) => {
     .then(
       async (success) => {
         if (!success) {
-          return getErrorResponse(res, "User not found");
+          return getErrorResponse(
+            res,
+            "This user is not active, or not exist!"
+          );
         }
         const randomPassword = Math.random().toString(36).slice(-8);
         const filter = { username: req.body.username };
