@@ -26,6 +26,7 @@ userRoutes.get("/", async (req, res) => {
 userRoutes.post("/create", async (req, res) => {
   await encryptPassword(req.body?.password).then(
     async (success) => {
+      req.body.password = success;
       await userModel.create(req.body).then(
         (success) => {
           getSuccessResponse(res, success);
