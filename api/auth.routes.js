@@ -14,30 +14,37 @@ const userModel = require("./v1/models/user.model");
 const authRoutes = express.Router();
 
 authRoutes.post("/login", async (req, res) => {
+  console.log(req.body);
   await userModel
     .findOne({
       username: req.body.username,
       isActive: true,
     })
-    .select("name username password")
+    .select("name username password isActive")
     .exec()
-    .then(async (result, error) => {
-      if (error) {
+    .then(
+      async (result) => {
+        console.log("result", result);
+        if (result) {
+          await compareBcrypt(req.body.password, result.password).then(
+            (resolve) => {
+              console.log(resolve);
+              if (!resolve) {
+                return getErrorResponse(res, "Incorrect Password");
+              }
+              const token = genrateToken(result);
+              getSuccessResponse(res, { token, result });
+            },
+            (err) => {
+              getErrorResponse(res, err);
+            }
+          );
+        }
+      },
+      (error) => {
         getErrorResponse(res, error);
       }
-      await compareBcrypt(req.body.password, result.password).then(
-        (resolve) => {
-          if (!resolve) {
-            return getErrorResponse(res, "Incorrect Password");
-          }
-          const token = genrateToken(result);
-          getSuccessResponse(res, { token, result });
-        },
-        (err) => {
-          getErrorResponse(res, err);
-        }
-      );
-    });
+    );
 });
 
 authRoutes.post("/forgetPassword", async (req, res) => {
