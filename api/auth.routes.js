@@ -19,7 +19,7 @@ authRoutes.post("/login", async (req, res) => {
       username: req.body.username,
       isActive: true,
     })
-    .select("name username isActive email")
+    .select("name username password isActive email")
     .exec()
     .then(async (result) => {
       if (!result) {
@@ -31,10 +31,12 @@ authRoutes.post("/login", async (req, res) => {
             return getErrorResponse(res, "Incorrect Password");
           }
           const token = genrateToken(result);
+          result.password = null;
           getSuccessResponse(res, { token, result });
         },
-        (err) => {
-          getErrorResponse(res, err);
+        (error) => {
+          console.log(error);
+          getErrorResponse(res, error);
         }
       );
     });
@@ -69,13 +71,14 @@ authRoutes.post("/forgetPassword", async (req, res) => {
               (success) => {
                 getSuccessResponse(res, { randomPassword, success });
               },
-              (err) => {
-                getErrorResponse(res, err);
+              (e) => {
+                console.log();
+                getErrorResponse(res, e);
               }
             );
           },
-          (error) => {
-            getErrorResponse(res, error);
+          (err) => {
+            getErrorResponse(res, err);
           }
         );
       },
