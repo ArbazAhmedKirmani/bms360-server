@@ -19,10 +19,11 @@ interceptors.use((req, res, next) => {
         next();
       },
       (error) => {
-        authErrorResponse(res, error);
+        return authErrorResponse(res, error);
       }
     );
-  } else authErrorResponse(res, { message: "Auth Signature is Missing" });
+  } else
+    return authErrorResponse(res, { message: "Auth Signature is Missing" });
 });
 
 module.exports = interceptors;

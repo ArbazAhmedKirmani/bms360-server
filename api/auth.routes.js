@@ -19,19 +19,19 @@ authRoutes.post("/login", async (req, res) => {
       username: req.body.username,
       isActive: true,
     })
-    .select("name username password")
+    .select("name username isActive email")
     .exec()
-    .then(async (user) => {
-      if (!user) {
+    .then(async (result) => {
+      if (!result) {
         return getErrorResponse(res, "This user is not active, or not exist!");
       }
-      await compareBcrypt(req.body.password, user.password).then(
+      await compareBcrypt(req.body.password, result.password).then(
         (resolve) => {
           if (!resolve) {
             return getErrorResponse(res, "Incorrect Password");
           }
-          const token = genrateToken(user);
-          getSuccessResponse(res, { token, user });
+          const token = genrateToken(result);
+          getSuccessResponse(res, { token, result });
         },
         (err) => {
           getErrorResponse(res, err);
