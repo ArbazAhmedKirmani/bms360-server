@@ -14,13 +14,12 @@ const userModel = require("./v1/models/user.model");
 const authRoutes = express.Router();
 
 authRoutes.post("/login", async (req, res) => {
-  console.log(req.body);
   await userModel
     .findOne({
       username: req.body.username,
       isActive: true,
     })
-    .select("name username password isActive")
+    .select("name username isActive email")
     .exec()
     .then(async (result) => {
       if (!result) {
